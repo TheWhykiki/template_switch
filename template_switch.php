@@ -32,34 +32,56 @@ class PlgSystemTemplate_switch extends JPlugin
 	public function onBeforeCompileHead()
 	{
         $this->app      = Factory::getApplication();
+
+        //var_dump(JMenu::getInstance('site')->getActive()->template_style_id);
         $this->document = Factory::getDocument();
         $params = $this->params;
 
-        $stateVar = $this->app->getUserState( 'themeState' );
+        $pluginParams = [
+            $params->get('theme')               =>  (int) $params->get('theme_id'),
+            $params->get('themeAlternative')    =>  (int) $params->get('themeAlternative_id')
+        ];
 
-        if(empty($stateVar))
+        $userThemeState = $this->app->getUserState( 'themeState' );
+
+        if(empty($userThemeState))
         {
-            $stateVar = $params->get('theme');
+            $userThemeState = $params->get('theme');
         }
+
+        //var_dump($userThemeState);
+        //var_dump($pluginParams);
+
 
         if ($this->app->isSite())
         {
-            $this->document->addScript( JURI::root() . '/plugins/system/template_switch/assets/js/switcher.js');
+            $this->document->addScript('../plugins/system/template_switch/assets/js/switcher.js');
         }
 
         $stylesheets = $this->document->_styleSheets;
-
+        //var_dump($stylesheets);
         $newStylesheets = [];
 
         foreach($stylesheets as $stylesheet => $value)
         {
-            $stylesheet = $this->replaceStringBetween($stylesheet, 'yootheme_', '/', $stateVar);
-            $newStylesheets[$stylesheet] = $value;
+			
+            $stylesheetNew = $this->replaceStringBetween($stylesheet, 'yootheme_', '/', $userThemeState);
+
+            foreach($pluginParams as $param => $themeId)
+            {
+                if($param === $userThemeState)
+                {
+                    $stylesheetNew = $this->replaceStringBetween($stylesheetNew, 'theme.', '.', $themeId);
+                }
+            }
+            $newStylesheets[trim($stylesheetNew)] = $value;
         }
         if ($this->app->isSite())
         {
             $this->document->_styleSheets = $newStylesheets;
         }
+
+      //var_dump($newStylesheets);
 	}
 
     /**
@@ -121,6 +143,8 @@ class PlgSystemTemplate_switch extends JPlugin
         $ini += strlen($start);
         $len = strpos($string,$end,$ini) - $ini;
         $foundString = substr($string,$ini,$len);
+        //var_dump($foundString);
+        //var_dump($toReplace);
         $replacedString = str_replace($foundString, $toReplace, $string);
         return $replacedString;
     }

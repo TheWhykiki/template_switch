@@ -22,16 +22,26 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-        <field
-          name="theme"
-          type="text"
-          label="Standardtheme (kleingeschrieben)"
-          />
-        <field
-          name="themeAlternative"
-          type="text"
-          label="Theme Alternative (kleingeschrieben)"
-          />
+				<field
+				  name="theme"
+				  type="text"
+				  label="Standardtheme (kleingeschrieben)"
+				  />
+				<field
+				  name="theme_id"
+				  type="text"
+				  label="Standardtheme ID"
+				  />
+				<field
+				  name="themeAlternative"
+				  type="text"
+				  label="Theme Alternative (kleingeschrieben)"
+				  />
+				<field
+				  name="themeAlternative_id"
+				  type="text"
+				  label="Theme Alternative ID"
+				  />
 			</fieldset>
 		</fields>
 	</config>

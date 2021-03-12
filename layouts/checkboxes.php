@@ -2,9 +2,6 @@
     use Joomla\CMS\Language\Text;
     $params = $displayData['params'];
     $state = $displayData['state'];
-
-    var_dump($params);
-    var_dump($state);
 ?>
 
 <form name="form" action="" method="post">
