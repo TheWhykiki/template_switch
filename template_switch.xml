@@ -11,6 +11,7 @@
 		<filename plugin="template_switch">template_switch.php</filename>
     <folder>layouts</folder>
     <folder>assets</folder>
+    <folder>language</folder>
 	</files>
   <languages folder="language">
     <language tag="en-GB">en-GB.plg_system_template_switch.ini</language>

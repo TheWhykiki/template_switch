@@ -36,23 +36,24 @@ class PlgSystemTemplate_switch extends JPlugin
         $params = $this->params;
 
         $stateVar = $this->app->getUserState( 'themeState' );
-var_dump($stateVar);
+
         if(empty($stateVar))
         {
             $stateVar = $params->get('theme');
         }
 
-        $this->document->addScript('../plugins/system/template_switch/assets/js/switcher.js');
+        if ($this->app->isSite())
+        {
+            $this->document->addScript('../plugins/system/template_switch/assets/js/switcher.js');
+        }
 
         $stylesheets = $this->document->_styleSheets;
 
         $newStylesheets = [];
 
-        //var_dump($doc->_styleSheets['/templates/yootheme_child/css/theme.9.css']);
         foreach($stylesheets as $stylesheet => $value)
         {
             $stylesheet = $this->replaceStringBetween($stylesheet, 'yootheme_', '/', $stateVar);
-            // $stylesheet = str_replace('_child', '_wurst', $stylesheet);
             $newStylesheets[$stylesheet] = $value;
         }
         if ($this->app->isSite())
@@ -72,7 +73,7 @@ var_dump($stateVar);
         $app    = JFactory::getApplication();
         $stateVar = $app->getUserState( 'themeState' );
         $params = $this->params;
-        var_dump($stateVar);
+
         if(empty($stateVar))
         {
             $stateVar = $params->get('theme');
@@ -92,7 +93,6 @@ var_dump($stateVar);
 
         $sHtml = str_replace('[templateSwitcher]', $html, $sHtml);
 
-        // Set body back
         $app->setBody($sHtml);
     }
 
