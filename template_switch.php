@@ -55,7 +55,7 @@ class PlgSystemTemplate_switch extends JPlugin
 
         if ($this->app->isSite())
         {
-            $this->document->addScript('../plugins/system/template_switch/assets/js/switcher.js');
+            $this->document->addScript(JURI::root() . 'plugins/system/template_switch/assets/js/switcher.js');
         }
 
         $stylesheets = $this->document->_styleSheets;
