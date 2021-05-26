@@ -49,19 +49,13 @@ class PlgSystemTemplate_switch extends JPlugin
             $userThemeState = $params->get('theme');
         }
 
-        //var_dump($userThemeState);
-        //var_dump($pluginParams);
-
-
         if ($this->app->isSite())
         {
-            $this->document->addScript(JURI::root() . 'plugins/system/template_switch/assets/js/switcher.js');
+            $this->document->addScript('../plugins/system/template_switch/assets/js/switcher.js');
         }
 
         $stylesheets = $this->document->_styleSheets;
-        //var_dump($stylesheets);
         $newStylesheets = [];
-
         foreach($stylesheets as $stylesheet => $value)
         {
 			
@@ -93,6 +87,10 @@ class PlgSystemTemplate_switch extends JPlugin
 	public function onAfterRender()
     {
         $app    = JFactory::getApplication();
+        if($app->isAdmin()) {
+            return false;
+        }
+
         $stateVar = $app->getUserState( 'themeState' );
         $params = $this->params;
 
@@ -137,16 +135,34 @@ class PlgSystemTemplate_switch extends JPlugin
      */
 
     function replaceStringBetween($string, $start, $end, $toReplace){
-        $string = " ".$string;
-        $ini = strpos($string,$start);
-        if ($ini == 0) return false;
-        $ini += strlen($start);
-        $len = strpos($string,$end,$ini) - $ini;
-        $foundString = substr($string,$ini,$len);
-        //var_dump($foundString);
-        //var_dump($toReplace);
-        $replacedString = str_replace($foundString, $toReplace, $string);
-        return $replacedString;
+
+        $params = $this->params;
+        $userThemeState = $params->get('theme');
+
+        if(!strpos($string,'yootheme_' , 0)){
+            $replacedString = $string;
+            return $replacedString;
+        }
+        else if(!strpos($string,'yootheme_' . $userThemeState , 0)){
+            $replacedString = $string;
+            return $replacedString;
+        }
+        else if(strpos($string,'custom' , 0)){
+            $replacedString = $string;
+            return $replacedString;
+        }
+        else {
+            $string = " " . $string;
+            $ini = strpos($string, $start);
+            if ($ini == 0) return false;
+            $ini += strlen($start);
+            $len = strpos($string, $end, $ini) - $ini;
+            $foundString = substr($string, $ini, $len);
+            //var_dump($foundString);
+            //var_dump($toReplace);
+            $replacedString = str_replace($foundString, $toReplace, $string);
+            return $replacedString;
+        }
     }
 
 }
