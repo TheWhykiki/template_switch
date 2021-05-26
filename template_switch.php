@@ -32,8 +32,6 @@ class PlgSystemTemplate_switch extends JPlugin
 	public function onBeforeCompileHead()
 	{
         $this->app      = Factory::getApplication();
-
-        //var_dump(JMenu::getInstance('site')->getActive()->template_style_id);
         $this->document = Factory::getDocument();
         $params = $this->params;
 
@@ -51,11 +49,12 @@ class PlgSystemTemplate_switch extends JPlugin
 
         if ($this->app->isSite())
         {
-            $this->document->addScript( JUri::root() . 'plugins/system/template_switch/assets/js/switcher.js');
+            $this->document->addScript(JUri::root() . 'plugins/system/template_switch/assets/js/switcher.js');
         }
 
         $stylesheets = $this->document->_styleSheets;
         $newStylesheets = [];
+        
         foreach($stylesheets as $stylesheet => $value)
         {
 			
@@ -74,8 +73,6 @@ class PlgSystemTemplate_switch extends JPlugin
         {
             $this->document->_styleSheets = $newStylesheets;
         }
-
-      //var_dump($newStylesheets);
 	}
 
     /**
@@ -136,19 +133,19 @@ class PlgSystemTemplate_switch extends JPlugin
 
     function replaceStringBetween($string, $start, $end, $toReplace){
 
+        $this->app      = Factory::getApplication();
+        $userThemeState = $this->app->getUserState( 'themeState' );
         $params = $this->params;
-        $userThemeState = $params->get('theme');
-
+        if(empty($userThemeState))
+        {
+            $userThemeState = $params->get('theme');
+        }
         if(!strpos($string,'yootheme_' , 0)){
             $replacedString = $string;
             return $replacedString;
         }
-        else if(!strpos($string,'yootheme_' . $userThemeState , 0)){
-            $replacedString = $string;
-            return $replacedString;
-        }
         else if(strpos($string,'custom' , 0)){
-            $replacedString = $string;
+            $replacedString = str_replace('yootheme_' . $params->get('theme'), 'yootheme_' . $userThemeState, $string);
             return $replacedString;
         }
         else {
@@ -158,8 +155,6 @@ class PlgSystemTemplate_switch extends JPlugin
             $ini += strlen($start);
             $len = strpos($string, $end, $ini) - $ini;
             $foundString = substr($string, $ini, $len);
-            //var_dump($foundString);
-            //var_dump($toReplace);
             $replacedString = str_replace($foundString, $toReplace, $string);
             return $replacedString;
         }
